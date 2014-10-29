@@ -1,0 +1,425 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{letterpaper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+\renewcommand\thesubsection{\alph{subsection})}
+
+%%% The "real" document content comes below...
+\usepackage[normalem]{ulem}
+
+\title{Assignment 5: Eigenproblems}
+\author{ Gregory \uline{Smetana} \\ID 1917370 \\ ACM 106a }
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+\usepackage{../mcode}
+
+\usepackage{mathtools}
+\pagestyle{fancy}
+\lhead{Gregory \uline{Smetana}}
+\rhead{ID 1917370 }
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\section{Normal matrices}
+A matrix $A \in \mathbf{C}^{n \times n}$ is normal if $A^*A = A A^*$
+\subsection{} %1a
+Without loss of generality, assume $A$ is an normal upper  triangular matrix. We then have $A^*A = A A^*$, with
+\newcommand\x{\times}
+\newcommand\bigzero{\makebox(0,0){\text{\huge0}}}
+\newcommand*{\bordl}{\multicolumn{1}{c|}{}}
+\newcommand*{\bordr}{\multicolumn{1}{|c}{}}
+\begin{equation}
+\begin{split}
+A A^* &=
+  \left(
+    \begin{array}{ccccc}
+    \x    & \x       & \x    & \x    & \x \\ \cline{1-1}
+    \bordl & \x       & \x    & \x    & \x \\ \cline{2-2}
+          & \bordl    & \x    & \x    & \x \\ \cline{3-3}
+          & \bigzero & \bordl & \x    & \x \\ \cline{4-4}
+          &          &       & \bordl & \x \\ \cline{5-5}
+  \end{array}\right)
+  \left(
+    \begin{array}{ccccc}\cline{1-1}
+    \x    &   \bordr    &   &     &  \\ \cline{2-2}
+    \x & \x       &  \bordr   & \bigzero    &  \\ \cline{3-3}
+     \x     & \x    & \x    &\bordr   &  \\ \cline{4-4}
+      \x    & \x & \x & \x    & \bordr \\ \cline{5-5}
+       \x   &   \x       &   \x    & \x & \x \\ 
+  \end{array}\right) \\
+A^*A &=    \left(
+    \begin{array}{ccccc}\cline{1-1}
+    \x    &   \bordr    &   &     &  \\ \cline{2-2}
+    \x & \x       &  \bordr   & \bigzero    &  \\ \cline{3-3}
+     \x     & \x    & \x    &\bordr   &  \\ \cline{4-4}
+      \x    & \x & \x & \x    & \bordr \\ \cline{5-5}
+       \x   &   \x       &   \x    & \x & \x \\ 
+  \end{array}\right)
+  \left(
+    \begin{array}{ccccc}
+    \x    & \x       & \x    & \x    & \x \\ \cline{1-1}
+    \bordl & \x       & \x    & \x    & \x \\ \cline{2-2}
+          & \bordl    & \x    & \x    & \x \\ \cline{3-3}
+          & \bigzero & \bordl & \x    & \x \\ \cline{4-4}
+          &          &       & \bordl & \x \\ \cline{5-5}
+  \end{array}\right)
+\end{split}
+\end{equation}
+\begin{equation}
+(AA^{*})_{i,j}= \sum_{m=1}^n A_{i,m} \overline{A_{j,m}}  = (A^*A)_{i,j}= \sum_{m=1}^n \overline{A_{m,i}} A_{m,j} 
+\end{equation}
+Now we prove that $A$ must be diagonal using induction. As a base case ($k=1$) we will show the off-diagonal entries in the first row of $A$ are zero by considering the element in the top left corner:
+\begin{equation}
+(A^*A)_{1,1}= \sum_{m=1}^n \| A_{m,1}\|^2
+\end{equation}
+Since $A$ is upper triangular, we have $A_{m,1}=0$ for $m >1$
+\begin{equation}
+ \sum_{m=1}^n \| A_{m,1}\|^2  = \|A_{1,1}\|^2
+\end{equation}
+Now comparing to the other sum,
+\begin{equation}
+ \|A_{1,1}\|^2= \sum_{m=1}^n \|A_{1,m}\|^2
+\end{equation}
+So we must have
+\begin{equation}
+\sum_{m=2}^n \|A_{1,m}\|^2 = 0
+\end{equation}
+Since each term in the sum is positive, we have concluded that $A_{1,m}=0$ for $m \ne 1$.
+
+Now, as the inductive step, we must show that if the off-diagonal entries in the first $k$ rows of $A$ are zero, the off-diagonal entries in the $(k+1)^{th}$ row are zero. Using a similar approach,
+\begin{equation}
+(A^*A)_{k+1,k+1}= \sum_{m=1}^n  \|A_{m,k+1} \|^2
+\end{equation}
+Due to the triangular structure, $A_{m,k+1}=0$ for $m > k+1$ and $A_{m,k+1} = 0$ for $m\le k$ due to zero entries in the first $k$ rows. There is only one non-zero term:
+\begin{equation}
+\sum_{m=1}^n  \|A_{m,k+1} \|^2 = \|A_{k+1,k+1}\|^2
+\end{equation}
+Comparing with the other representation,
+\begin{equation}
+ \|A_{k+1,k+1}\|^2= \sum_{m=1}^n \|A_{k+1,m}\|^2
+\end{equation}
+\begin{equation}
+\sum_{m=k+2}^n \|A_{k+1,m}\|^2 = 0
+\end{equation}
+Since the elements in the sum are positive, the off-diagonal entries in the $(k+1)^{th}$ row must be zero. Therefore, we have proved that \uline{a normal triangular matrix must also be diagonal.}
+\subsection{} %1b
+The Schur Decomposition is
+\begin{equation}
+A = Q T Q^*
+\end{equation}
+where $Q \in \mathbf{R}^{n \times n}$ is unitary and $T \in \mathbf{R}^{n \times n}$ is upper triangular.
+
+\begin{equation}
+AA^* = Q T Q^* Q T^* Q^* = Q T T^* Q^*
+\end{equation}
+\begin{equation}
+A^*A = Q T^* Q^* Q T Q^* = Q T^* T Q^*
+\end{equation}
+Suppose that $A$ is a normal matrix
+\begin{equation}
+ Q T T^* Q^* = Q T^* T Q^*
+\end{equation}
+\begin{equation}
+ Q^* Q T T^* Q^* Q =  Q^* Q T^* T Q^* Q
+\end{equation}
+\begin{equation}
+T T^*  =   T^* T 
+\end{equation}
+So if  a matrix $A$ is a normal, its Schur form $T$ is normal. 
+
+Now we must show that if $T$ is normal, $A$ is normal. If a triangular matrix is normal, it was shown in part a) that it must be diagonal. In this case,
+\begin{equation}
+A = Q D Q^*
+\end{equation}
+\begin{equation}
+AA^* = Q D Q^* Q \overline{D} Q^* = Q D^2 Q^*
+\end{equation}
+\begin{equation}
+A^*A = Q \overline{D} Q^* Q T Q^* = Q D^2 Q^*
+\end{equation}
+and $A$ is normal. Therefore, \uline{a matrix $A$ is normal \emph{if and only if} its Schur form is normal.}
+\subsection{} %1c
+First, suppose that $A$ is normal. From the previous question, the Schur decomposition is
+\begin{equation}
+A = Q D Q^*
+\end{equation}
+with  $Q \in \mathbf{R}^{n \times n}$  unitary and $D \in \mathbf{R}^{n \times n}$ diagonal. This is the eigendecomposition of $A$. Consider $AQ = Q D$:
+\begin{equation}
+\left [ A q_1 ... A q_n \right ] = \left [ \lambda_1 q_1 ... \lambda_n q_n \right ]
+\end{equation}
+where $q_i$ are the columns of $Q$ and $\lambda_i = D_{i,i}$. The columns of $Q$ are orthogonal. Thus, $A$ has $n$ orthogonal eigenvectors.
+
+Now suppose that $A$ has $n$ orthogonal eigenvectors. If $Q$ is a matrix of eigenvectors, then $A$ can be represented
+\begin{equation}
+A= Q D Q^*
+\end{equation}
+Using the previous result, since the Schur form is normal, the matrix $A$ is normal.
+
+Therefore, \uline{a matrix $A$ is normal \emph{if and only if} it has $n$ orthogonal eigenvectors.}
+
+
+\section{Inverse iteration and ill-conditioned systems}
+the inverse iteration algorithm requires the solution of a linear system of the form
+\begin{equation}
+(A-\sigma)y_{i+1}=x_i
+\end{equation}
+The matrix $A-\sigma I$ is ill-conditioned if the shift is very close to an eigenvalue of $A$. In the current investigation of this issue, the following simplifications are made:
+\begin{itemize}
+\item $A \in \mathbf{R}^{n \times n}$ is a real symmetric matrix with $n$ real eigenvalues $(\lambda_1, ..., \lambda_n)$ and orthonormal eigenvectors $(q_1, ... ,q_n)$
+\item $A$ is well conditioned so that we may solve linear systems of the form $Ay=x$ backward stably
+\item The eigenvalue $\lambda_1$ is simple, with eigenvector $q_1$
+\end{itemize}
+
+\subsection{} %2a
+The shift $\sigma = \lambda_1 +\mu$ for some very small $\mu \in \mathbf{R}$. We solve the linear system
+\begin{equation}
+(A-\sigma I + \delta A)\tilde{y}_{k+1}=x_k
+\label{eq:2a}
+\end{equation}
+for some $\| \delta A \|_2 = O(\epsilon)$. Taking $x_{k+1} =  \tilde{y}_{k+1}/ \| \tilde{y}_{k+1}\|_2$,
+\begin{equation}
+(A + \delta A - (\lambda_1 + \mu)I )x_{k+1} =\frac{x_k}{\| \tilde{y}_{k+1}\| }
+\end{equation}
+\begin{equation}
+(A - \lambda_1 I )x_{k+1} =(\mu I -\delta A)x_{k+1}  + \frac{x_k}{\| \tilde{y}_{k+1}\|_2 }
+\end{equation}
+Taking the norm of both sides,
+\begin{equation}
+\|(A - \lambda_1 I )x_{k+1}\|_2 = \|(\mu I -\delta A)x_{k+1}\|_2  + \frac{\|x_k\|_2}{\| \tilde{y}_{k+1}\|_2 }
+\end{equation}
+Since $\|x_{k+1} \|_2 = \|x_{k} \|_2 = 1$, and $\|\delta Ax_{k+1} \|_2 \le \|\delta A\|_2 \|x_{k+1}\|_2$ we have
+\begin{equation}
+\boxed{\|(A - \lambda_1 I )x_{k+1}\|_2 \le (|\mu|  + \|\delta A\|_2) + \frac{1}{\| \tilde{y}_{k+1}\|_2 }}
+\end{equation}
+
+\subsection{} %2b
+$A$ is symmetric, so its set of eigenvectors $\{q_1 ... q_n\}$ forms an orthonormal basis for $\mathbf{R}^n$. Therefore, we may decompose $x_k$ and $x_{k+1}$ as
+\begin{equation}
+x_k = \sum \alpha_i q_i
+\end{equation}
+\begin{equation}
+\tilde{y}_{k+1} = \sum \beta_i q_i
+\end{equation}
+Plugging this into Equation~\ref{eq:2a},
+\begin{equation}
+(A-\lambda_1 I ) \sum \beta_i q_i -\mu \sum \beta_i q_i - \delta A \sum \beta_i q_i = \sum \alpha_i q_i
+\end{equation}
+Since $A q_i = \lambda_i q_i$, we have 
+\begin{equation}
+ \sum \beta_i (\lambda_i - \lambda_1) q_i -\mu \sum \beta_i q_i - \delta A \sum \beta_i q_i = \sum \alpha_i q_i
+\end{equation}
+Multiplying on the left by $q_1^T$, we have
+\begin{equation}
+-\mu \beta_1- q_1^T \delta A \tilde{y}_{k+1} = \alpha_1
+\end{equation}
+Taking norms, 
+\begin{equation}
+ | \mu | | \beta_1 | + \| \delta A \|_2 \| y_{k+1} \|_2 \ge | \alpha_1 | 
+\end{equation}
+Since $\beta_1 \le \sqrt{\beta_1^2 + ... +\beta_n^2} = \| \tilde{y}_{k+1}\|_2$,
+\begin{equation}
+\boxed{ \| \tilde{y}_{k+1} \|_2 \ge \frac{ | \alpha_1 |}{ | \mu | + \| \delta A \|_2}}
+\end{equation}
+\section{QR iteration with shifts}
+\subsection{} %3a
+To perform QR iteration with shifts, we update $A_i$ by first factorizing $(A_i - \sigma_i I)=Q_i R_i $ and then setting $A_{i+1}=R_i Q_i +\sigma_i I$
+\begin{equation}
+\begin{split}
+A_{i+1} &= R_i Q_i +\sigma_i I\\
+&= Q_i^* Q_i R_i Q_i + \sigma_i Q_i^* Q_i\\
+&=Q_i^* (Q_i R_i + \sigma_i I) Q_i\\
+& = Q_i^* A_i Q_i
+\end{split}
+\end{equation}
+We start with $A_1 = A$, so we may express $A_{i+1}$ with the unitary matrix $\overline{Q}_i = Q_1 Q_2 ... Q_i$ so that
+\begin{equation}
+\boxed{A_{i+1} = \overline{Q}_i^* A \overline{Q}_i}
+\end{equation}
+\subsection{} %3b
+
+A matrix $H$ is in upper Hessenberg form if all entries below the first subdiagonal of $H$ are equal to zero, i.e., $H_{i,j} = 0$ for all $i \ge j+2$. 
+
+\begin{equation}
+(HT)_{i,j} = \sum_{m=1}^n H_{i,m} T_{m,j}
+\end{equation}
+Considering the structure of the matrices, we have $H_{i,m} = 0$ for $m < i-1$ for upper Hessenberg $H$ and $T_{m,j}=0$ for $j < m$ for upper triangular $T$. With these two inequalities, we see that for $i \ge j+2$, each term in the sum is zero. Thus, \uline{the product $TH$ is upper Hessenberg.}
+
+\begin{equation}
+(TH)_{i,j} = \sum_{m=1}^n T_{i,m} H_{m,j}
+\end{equation}
+Again considering the structure of the matrices, we have $H_{m,j} = 0$ for $m > j+1$ for upper Hessenberg $H$ and $T_{i,m}=0$ for $i > m$ for upper triangular $T$. With these two inequalities, we see that for $i \ge j+2$, each term in the sum is zero. Thus, \uline{the product $HT$ is upper Hessenberg.}
+
+\subsection{} %3c
+First recall that in the QR decomposition $A=QR$, the first $k$ columns of $Q$ form an orthonormal basis for the span of the first $k$ columns of $A$. We now consider the factorization
+\begin{equation}
+A_i - \sigma_i I = Q_i R_i
+\end{equation}
+with upper Hessenberg $A_i$. The the difference $A- \sigma I $ remains upper Hessenberg and the factorization yields an upper Hessenberg $Q_i$ since the $j^{th}$ column of $Q$ is a linear combination of the leading $j$ columns of $A_i - \sigma_i I$.
+
+\begin{equation}
+A_{i+1} = R_i Q_i + \sigma_i I
+\end{equation}
+If $Q_i$ is upper Hessenberg, the product $R_i Q_i$ is upper Hessenberg using the results of the previous question. Adding $\sigma_i I$ does not change this. Therefore, \uline{if $A_i$ is upper Hessenberg, then so is $A_{i+1}$}
+
+\section{QR iteration with bad shifts}
+\subsection{} %4a
+Explicit QR iteration without shifts (Demmel Algorithm 4.4) was implemented in Matlab in  \verb$qr_iteration.m$. Explicit QR iteration with shifts (Demmel Algorithm 4.5) was implemented in  \verb$qr_shift.m$. Matlab's built-in ``qr" was used to perform the factorizations, and the shifts used $\sigma_i = A_i(4,4)$. The algorithms were said to converge when $\|$diag$(A_{i+1} - A_i) \|_\infty$ is less than the tolerance $10^{-6}$. The matrix examined was
+\begin{equation}
+A = \left ( \begin{array}{rrrr}
+5 & -1 & 0 & 0\\
+-1 & 5 & -1 &0\\
+0 & -1 & 5 & -1 \\
+0 & 0 & -1 & 5 
+\end{array} \right )
+\end{equation}
+\subsection{} %4b
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l |l | l | l | } \hline
+ &\verb$qr_iteration.m$ &   \verb$qr_shift.m$ & Matlab \verb$eig$ \\ \hline
+Eigenvalues   & 6.6180e+00 &  5.0000e+00 &  3.3820e+00  \\
+ &  5.6180e+00 &  5.0000e+00 &  4.3820e+00  \\
+  & 4.3820e+00  & 5.0000e+00  & 5.6180e+00  \\
+  & 3.3820e+00  & 5.0000e+00 &  6.6180e+00  \\ \hline
+Iterations & 43 &1 &- \\ \hline
+\end{tabular}
+\caption{}
+\label{tab:4b}
+\end{table}
+The results of using the algorithms outlined in part a) are displayed in Table~\ref{tab:4b}. Comparing to those given by the command ``eig" in Matlab, we see that QR iteration without shifts gives accurate answers after 43 iterations, but the QR iteration with shifts gives an incorrect answer after 1 iteration.
+
+To understand why  the QR iteration with shifts fails to give accurate results, consider convergence of QR iteration on the shifted matrix:
+\begin{equation}
+A - \sigma = \left ( \begin{array}{rrrr}
+0 & -1 & 0 & 0\\
+-1 & 0 & -1 &0\\
+0 & -1 & 0 & -1 \\
+0 & 0 & -1 & 0 
+\end{array} \right )
+\end{equation}
+Using Matlab's \verb$eig$ to compute the eigenvalues of this matrix:
+\begin{equation}
+\begin{split}
+\lambda_{1,2} = \pm 1.618\\
+\lambda_{3,4} = \pm 0.618
+\end{split}
+\end{equation}
+As discussed in class, the convergence rate depends on the ratio of the eigenvalues. Since the eigenvalues of $A - \sigma I $ are symmetric about the origin, the algorithm cannot decide which way to go, and it stalls. A algorithm is needed with a different shift that breaks the symmetry.
+\subsection{} %4c
+To correct the issues observed with shifting in Part (b), we may use the Wilkinson shift, described in Demmel $\S$5.3.1. QR iteration with Wilkinson's shift is globally, and at least linearly, convergent. It is asymptotically cubically convergent for almost all matrices. In the Wilkinson shift, we define
+\begin{equation}
+B = \left ( \begin{array}{cc}
+a_{n-1} & b_{n-1} \\
+b_{n-1} & a_n
+\end{array} \right )
+\end{equation}
+as the lower right 2x2 submatrix of A.
+We choose $\sigma_i$ as the eigenvalue $B$ that is closest to $a_n$. The eigenvalues of $B$ may be expressed
+\begin{equation}
+\lambda_{1,2} = \frac{1}{2}\left (a_{n-1} + a_n \pm \sqrt{(a_{n-1}-a_n)^2 + 4b_{n-1}^2} \right )
+\end{equation}
+Setting $d= (a_{n-1}-a_n)/2$,
+\begin{equation}
+\lambda_{1,2}  = a_n + d \pm \sqrt{b_{n-1}^2 + d^2}
+\end{equation}
+So to choose $\sigma_i$, we must consider the sign of $d$:
+
+ If $d \ge 0$,
+\begin{equation}
+\sigma_i = a_n + d - \sqrt{b_{n-1}^2 + d^2}
+\end{equation}
+
+If $d < 0$,
+\begin{equation}
+\sigma_i = a_n + d+ \sqrt{b_{n-1}^2 + d^2}
+\end{equation}
+Implementing this in the function \verb$qr_wilkinson.m$, the results are displayed in Table~\ref{tab:4c}. We see that the algorithm converges to the correct result in 16 iterations.
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l |l | l | } \hline
+ &   \verb$qr_wilkinson.m$ & Matlab \verb$eig$ \\ \hline
+Eigenvalues   &     6.6180e+00&  3.3820e+00  \\
+ &  5.6180e+00 &  4.3820e+00  \\
+  & 3.3820e+00   & 5.6180e+00  \\
+  &4.3820e+00&  6.6180e+00  \\ \hline
+Iterations & 16 &- \\ \hline
+\end{tabular}
+\caption{}
+\label{tab:4c}
+\end{table}
+\clearpage
+\appendix
+\section{qr\_iteration.m}
+\lstinputlisting{../qr_iteration.m}
+\section{qr\_shift.m}
+\lstinputlisting{../qr_shift.m}
+\section{qr\_wilkinson.m}
+\lstinputlisting{../qr_wilkinson.m}
+
+
+\section{Smetana\_Gregory\_1917370\_A5\_P4\_DIARY.txt}
+\lstinputlisting{../Smetana_Gregory_1917370_A5_P4_DIARY.txt}
+
+\section{Smetana\_Gregory\_1917370\_A5\_P4m}
+\lstinputlisting{../Smetana_Gregory_1917370_A5_P4.m}
+
+\end{document}
+

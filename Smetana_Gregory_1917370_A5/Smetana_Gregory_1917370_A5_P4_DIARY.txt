@@ -1,0 +1,32 @@
+run('Smetana_Gregory_1917370_A5_P4.m');
+qr_iteration.m
+i =
+    43
+ans =
+   6.6180e+00
+   5.6180e+00
+   4.3820e+00
+   3.3820e+00
+qr_shift.m
+i =
+     1
+ans =
+     5
+     5
+     5
+     5
+eig
+ans =
+   3.3820e+00
+   4.3820e+00
+   5.6180e+00
+   6.6180e+00
+qr_wilkinson.m
+i =
+    16
+ans =
+   6.6180e+00
+   5.6180e+00
+   3.3820e+00
+   4.3820e+00
+diary off
