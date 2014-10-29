@@ -1,0 +1,14 @@
+run('Smetana_Gregory_1917370_A2_P4.m')
+n = 10
+residual = 3.2406e-16(7.2439e-17)
+t_alg = 29.48(35.5377) [microsecond]
+t_matlab = 14.72(4.9034) [microsecond]
+n = 100
+residual = 3.07e-15(3.2974e-16)
+t_alg = 66.12(133.4302) [microsecond]
+t_matlab = 188.36(15.6601) [microsecond]
+n = 500
+residual = 1.8382e-14(1.0714e-15)
+t_alg = 193.8(21.2289) [microsecond]
+t_matlab = 4977.48(296.7853) [microsecond]
+diary off

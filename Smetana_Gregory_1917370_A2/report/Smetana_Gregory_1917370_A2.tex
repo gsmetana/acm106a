@@ -1,0 +1,437 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+\renewcommand\thesubsection{\alph{subsection})}
+
+%%% The "real" document content comes below...
+\usepackage[normalem]{ulem}
+
+\title{Assignment 2: Norms, Inner Products, and Linear System
+Solving}
+\author{ Gregory \uline{Smetana} \\ID 1917370 \\ ACM 106a }
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+\usepackage{../mcode}
+
+\usepackage{mathtools}
+\pagestyle{fancy}
+\lhead{Gregory \uline{Smetana}}
+\rhead{ID 1917370 }
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\section{Equivalence of norms}
+
+\subsection{} %1a
+
+To prove that all vector norms on $\mathbf{R}^n$ and $\mathbf{C}^n$ are equivalent, it is sufficient to show that all norms are equivalent to $\| \cdot \|_2 $. This is true because norm equivalence is transitive
+
+\begin{equation}
+m_a \| x \| _2 \le \| x \|_a \le M_a \|x\|_2
+\end{equation}
+
+\begin{equation}
+m_b \| x \| _2 \le \| x \|_b \le M_b \|x\|_2
+\end{equation}
+
+\begin{equation}
+\frac{m_b}{M_a} \| x \| _a \le \| x \|_b \le \frac{M_b}{m_a} \|x\|_a
+\end{equation}
+The inequality may be divided by $\| x \|_2$, so it is sufficient to consider only the case with $\|x\|_2 = 1$:
+\begin{equation}
+m \| x \| _2 \le \| x \|_a \le M \|x\|_2
+\end{equation}
+
+\begin{equation}
+m  \le \| x' \|_a \le M
+\end{equation}
+Now, we want to show that any norm is a continuous function. This means that as $x \rightarrow y$, we need $\left | \|x\|_a - \|y\|_a   \right | \rightarrow 0$. As $x$ converges to $y$, we have
+
+\begin{equation}
+\|x - y \|_a < \epsilon
+\end{equation}
+Considering a variation of the triangle inequality
+
+\begin{equation}
+\| x - y \|_a \ge \|x \|_a - \|y \|_a
+\end{equation}
+Thus,
+\begin{equation}
+\left | \|x\|_a - \|y\|_a   \right |  < \epsilon
+\end{equation}
+and the norm is continuous.
+
+Therefore, by the extreme value theorem, the norm $\| x \|_a$ has a minimum and maximum on the closed disk $\| x \|_2 =1$. We may write
+\begin{equation}
+m_a \| x \| _2 \le \| x \|_a \le M_a \|x\|_2
+\end{equation}
+
+and it follows from the transitive property of norm equivalence that there exist constants $m$ and $M$ independent of $x$, such that
+
+\begin{equation}
+\boxed{m \|x\|_a \le \| x\|_b \le M \| x \| _a}
+\end{equation}
+
+\subsection{} % 1b
+
+%\begin{equation}
+%\end{equation}
+
+\begin{equation}
+c_1 \| x \|_\infty \le \|x \|_2
+\end{equation}
+
+\begin{equation}
+c_1 \textrm{max}_i |x_i | \le \sqrt{x_1^2 + x_2^2 + \hdots + x_n^2}
+\end{equation}
+Setting $\| x \|_2 =1$, and maximizing the left side with  $x = (1, 0 ,0, ..., 0)$, we determine $c_1 = 1$
+
+\begin{equation}
+ \|x \|_2 \le c_2 \| x \|_\infty 
+\end{equation}
+
+\begin{equation}
+\sqrt{x_1^2 + x_2^2 + \hdots + x_n^2} \le c_2 \textrm{max}_i |x_i | 
+\end{equation}
+Setting $\| x \|_2 =1$, and minimizing the right side with $x = (1/\sqrt{n}, 1/\sqrt{n} ,1/\sqrt{n}, ..., 1/\sqrt{n})$, we determine $c_2 = \sqrt{n}$. Therefore, 
+
+\begin{equation}
+\boxed{\| x \| _\infty \le \| x \|_2 \le \sqrt{n} \|x\|_\infty}
+\end{equation}
+
+\begin{equation}
+c_3 \| x \|_2 \le \|x \|_1
+\end{equation}
+
+\begin{equation}
+c_3 \sqrt{x_1^2 + x_2^2 + \hdots + x_n^2} \le |x_1| + |x_2| + \hdots + |x_n|
+\end{equation}
+Setting $\| x \|_2 =1$, and minimizing the right side with $x = (1, 0 ,0, ..., 0)$, we determine $c_3 = 1$
+
+\begin{equation}
+\| x \|_1 \le c_4 \|x \|_2
+\end{equation}
+
+\begin{equation}
+|x_1| + |x_2| + \hdots + |x_n| \le c_4 \sqrt{x_1^2 + x_2^2 + \hdots + x_n^2} 
+\end{equation}
+Setting $\| x \|_2 =1$, and maximizing the left side with $x = (1/\sqrt{n}, 1/\sqrt{n} ,1/\sqrt{n}, ..., 1/\sqrt{n})$, we determine $c_4 = \sqrt{n}$. Therefore, 
+
+\begin{equation}
+\boxed{\| x \| _\infty \le \| x \|_2 \le \sqrt{n} \|x\|_\infty}
+\end{equation}
+
+
+\section{Operator norm of the inverse}
+The matrix operator norm induced by the vector norm $\| \cdot \|$ is given by
+\begin{equation}
+\| A \| =\textrm{max}_{x\ne 0} \frac{\| Ax\|}{\|x\|}
+\end{equation}
+Applying to the inverse,
+\begin{equation}
+\| A^{-1} \| =\textrm{max}_{y \ne 0} \frac{\| A^{-1}y\|}{\|y\|}
+\end{equation}
+Since $A x = y$ and $ x  =A^{-1} y$
+\begin{equation}
+\| A^{-1} \| =\textrm{max}_{x\ne 0} \frac{\|x\|}{\|A x\|}
+\end{equation}
+Therefore
+
+\begin{equation}
+\boxed{\| A^{-1} \|^{-1} = \frac{1}{\| A^{-1} \| } = \textrm{min}_{y \ne 0} \frac{\| A y\|}{\|y\|}}
+\end{equation}
+\section{Floating point dot and matrix products}
+
+Fundamental axiom of floating point arithmetic:
+
+\begin{equation}
+fl(x \odot y) = (x \odot y)(1+\delta)
+\label{eq:fp}
+\end{equation}
+for some $\delta \in [-\epsilon_M, \epsilon_M] $
+\subsection{} %3a
+
+\begin{equation}
+fl(x^T y ) = fl \left ( \sum_{i=1}^d x_i y_i \right )
+\label{eq:3a}
+\end{equation}
+Each product in Equation~\ref{eq:3a} incurs an error according to Equation~\ref{eq:fp}
+\begin{equation}
+fl(x^T y ) = x_1 y_1 (1+\delta_1) +_{f} x_2 y_2 (1+\delta_2) +_{f} x_3 y_3 (1+\delta_3)+_{f}  \hdots +_{f} x_d y_d (1+\delta_d) 
+\end{equation}
+where $+_f$ indicates floating point addition. Applying the formula to the sum,
+\begin{equation}
+fl(x^T y ) =  \left ( x_1 y_1 (1+\delta_1) + x_2 y_2 (1+\delta_2) \right ) (1+\delta^1) +_f x_3 y_3 (1+\delta_3)+_f \hdots +_f x_d y_d (1+\delta_d) 
+\end{equation}
+\begin{equation}
+\begin{split}
+fl(x^T y ) &=  x_1 y_1 (1+\delta_1)(1+\delta^1)(1+\delta^2) \hdots (1+\delta^{d-1})  \\
+           &+ x_2 y_2 (1+\delta_2)  (1+\delta^1) (1+\delta^2) \hdots (1 +\delta^{d-1}) \\
+	& + x_3 y_3 (1+\delta_3)(1+\delta^2) (1+\delta^3)\hdots (1 +\delta^{d-1} ) \\
+	& \hdots \\
+	& + x_d y_d (1+\delta_d) (1+\delta^{d-1})
+\end{split}
+\end{equation}
+
+Using the inequality $ (1+\delta_i)(1+\delta^1)(1+\delta^2) \hdots (1+\delta^{d-1}) \le (1+\delta)^d$,  with $|\delta| \ge |\delta_i|$ and $|\delta| \ge| \delta^i|$, this may be simplified:
+\begin{equation}
+fl(x^T y ) = \sum_{i=1}^d x_i y_i (1+\delta)^d
+\end{equation}
+for some $\delta \in [-\epsilon, \epsilon] $. Since $(1+ \delta)^d \le (1 + d \delta) $, this may be further simplified to
+\begin{equation}
+\boxed{fl(x^T y ) = \sum_{i=1}^d x_i y_i (1+\delta_i)}
+\end{equation}
+for some $\delta_i \in [-d\epsilon, d \epsilon] $
+\subsection{} %3b
+\begin{equation}
+ (|fl(AB) -AB| )_{ij} =( | fl( \sum_{k=1}^n A_{ik}B_{kj} ) -  \sum_{k=1}^n A_{ik}B_{kj} | )_{ij}
+\end{equation}
+Using the earlier result,
+\begin{equation}
+ (|fl(AB) -AB| )_{ij} =( |  \sum_{k=1}^n A_{ik}B_{kj} (1+\delta_k) -  \sum_{k=1}^n A_{ik}B_{kj} | )_{ij} = ( |  \sum_{k=1}^n A_{ik}B_{kj} \delta_k | )_{ij}
+\end{equation}
+for some $\delta_k \in [-n \epsilon, n \epsilon] $
+We may write this as an inequality to show that
+\begin{equation}
+\boxed{ (|fl(AB) -AB| )_{ij} \le n \epsilon ( | A || B | )_{ij}}
+\end{equation}
+\section{Linear systems and rank-one error}
+\subsection{} %4a
+If the columns of $E$ span a one-dimensional vector space, its columns may be expressed as multiples of a vector $u$:
+
+\begin{equation}
+E=
+ \begin{pmatrix}
+  \vdots  & \vdots  & & \vdots  \\
+  c_1 u & c_2 u & \cdots & c_n u \\
+  \vdots  & \vdots  &   & \vdots  \\
+ \end{pmatrix}
+\end{equation}
+The constants $c$ may be expressed as a vector, $v$, so it follows that the matrix E must have the factorization
+
+\begin{equation}
+E= u v^T
+\end{equation}
+
+\subsection{} %4b
+
+\begin{equation}
+\left ( A + uv^T \right ) ^{-1} = A^{-1} - \sigma A^{-1} u v^T A^{-1}
+\label{eq:inverse}
+\end{equation}
+\begin{equation}
+I = \left ( A + uv^T \right ) \left ( A^{-1} - \sigma A^{-1} u v^T A^{-1} \right )
+\end{equation}
+\begin{equation}
+I = I - \sigma u v^T A^{-1}+u v^T A^{-1} - \sigma  u v^T A^{-1} u v^{T} A^{-1}
+\end{equation}
+\begin{equation}
+0 =  \sigma u v^T A^{-1} - u v^T A^{-1} + \sigma  u v^T A^{-1} u v^{T} A^{-1}
+\end{equation}
+Labelling scalar quantity $s = v^T A^{-1} u $ and factoring
+\begin{equation}
+u v^T A^{-1}  =  \sigma u v^T A^{-1}   +s \sigma  u v^{T} A^{-1}
+\end{equation}
+\begin{equation}
+1  =  \sigma  +s \sigma 
+\end{equation}
+\begin{equation}
+ \sigma  = \frac{1}{1+s}
+\label{eq:sigma}
+\end{equation}
+\begin{equation}
+ \boxed{\sigma  =  \frac{1}{1+v^T A^{-1} u}}
+\label{eq:sigma}
+\end{equation}
+So we have shown that if $v^T A^{-1} u \ne -1$, 
+\begin{equation}
+\boxed{\left ( A + uv^T \right ) ^{-1} = A^{-1} - \frac{A^{-1} u v^T A^{-1}}{1+v^T A^{-1} u}}
+\end{equation}
+\subsection{} %4c
+We wish to solve $\tilde{A}x =b$ using the Sherman-Morrison formula.
+
+\begin{equation}
+x =  A^{-1}b - \frac{ A^{-1} u v^T A^{-1}b }{1+v^T A^{-1} u}
+\end{equation}
+If we say that $Ay=b$ and $Az = u$, this may be written as
+
+\begin{equation}
+x =  y - z\frac{ v^T y }{1+v^T z}
+\end{equation}
+So the (pseudocode) algorithm for solving $\tilde{A}x=b$ is
+
+\begin{enumerate}
+\item Solve Ay =b for y 
+\item Solve Az = u for z  
+\item Compute product  $r=v^T y$
+\item Compute product  $t=v^T z$
+\item Compute $x = y- z \frac{r}{1+t}$
+\end{enumerate}
+
+If $Ax=b$ can be solved in $M$ flops, the first two steps of the algorithm will require $M$ flops each. The dot product in steps 3 and 4 is only $O(n)$ flops each. Therefore if $M$ satisfies $n=O(M)$ the algorithm requires only $O(M)$ operations.
+
+\subsection{} %4d
+ If $A$ is an orthogonal matrix, in solving for $\tilde{A}x =b$, the linear systems $Ay=b$ and $Az=u$ may be solved easily by multiplying by the transpose. This was done for 25 random orthogonal matrices  $A$, with random vectors $u, v, b$, for $n=10, 100, 500$. The results of using the Sherman-Morrison formula are compared with Matlab's backslash operator in Table~\ref{tab:4d}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{| l | l | l|l |}\hline
+ & n=10 & n=100 & n=500 \\ \hline
+ $\| \tilde{x} -x \|_2$ &3.2406e-16(7.2439e-17) &   3.07e-15(3.2974e-16) &  1.8382e-14(1.0714e-15)  \\ \hline
+ Time $[\mu s]$: my\_alg  \quad &  29.48(35.5377) &  66.12(133.4302)&  193.8(21.2289)\\ \hline
+Time$[\mu s]$: $A \backslash b$&14.72(4.9034)&  188.36(15.6601) &  4977.48(296.7853)  \\ \hline
+\end{tabular}
+\caption{}
+\label{tab:4d}
+\end{table}
+The results show that the residual  $\| \tilde{x} -x \|_2$, was low for all cases but increased with $n$ due to the round-off error associated with more floating point operations. Matlab's backslash operator was faster for small values of $n$, but much more rapidly with $n$ than the Sherman-Morrison formula. This is because the Sherman-Morrison formula is a lower order method than the Gaussian elimination with partial pivoting used by the backslash operator. Gaussian elimination is $O(n^3)$ and the matrix multiplication used in orthogonal Sherman-Morrison is only $O(n^2)$
+
+\clearpage
+\appendix
+\section{Smetana\_Gregory\_1917370\_A2\_P4\_DIARY.txt}
+\lstinputlisting{../Smetana_Gregory_1917370_A2_P4_DIARY.txt}
+
+\section{Smetana\_Gregory\_1917370\_A2\_P4.m}
+\lstinputlisting{../Smetana_Gregory_1917370_A2_P4.m}
+
+\section{sherman\_morrison.m}
+\lstinputlisting{../sherman_morrison.m}
+
+\end{document}
+
+
+%The $p$-norm is defined
+%
+%\begin{equation}
+% \|x\|_p = \left ( \sum_{i=1}^n |x_i|^p \right ) ^{1/p} \quad ,\quad p\ge 1
+%\end{equation}
+%
+%The Cauchy-Schwarz inequality can be extended into Holder's Inequality:
+%
+%\begin{equation} 
+%|y^*z| \le \|z\|_p \| y \|_q 
+%\label{eq:holder}
+%\end{equation}
+%if $1/p + 1/q = 1$. It may therefore be expressed:
+%
+%\begin{equation} 
+%\sum_{i=1}^n |z_i| |y_i| \le \left ( \sum_{i=1}^n |z_i|^p \right )^{1/p} \left ( \sum_{i=1}^n |y_i|^\frac{p}{p-1} \right )^{1-1/p}
+%\label{eq:holder2}
+%\end{equation}
+%
+%\subsection{} % 1a
+%
+%Setting $y_i = 1$ in Equation~\ref{eq:holder2}
+%\begin{equation}
+%\sum_{i=1}^n |z_i| \le \left ( \sum_{i=1}^n|z_i|^{p}  \right )^{1/p} \left ( \sum_{i=1}^n 1^{\frac{p}{p-1}} \right )^{1-1/p}
+%\end{equation}
+%
+%
+%\begin{equation}
+%\sum_{i=1}^n |z_i| \le \left ( \sum_{i=1}^n|z_i|^{p}  \right )^{1/p} n^{1-1/p}
+%\end{equation}
+%
+%Now taking $ |z_i|  = |x_i|^{a} $, with $ b  = p a$,  
+%
+% \begin{equation}
+%\sum_{i=1}^n |x_i|^{a} \le \left ( \sum_{i=1}^n|x_i|^{b}  \right )^{a/b} n^{1-a/b}
+%\end{equation}
+%
+% \begin{equation}
+%\left ( \sum_{i=1}^n |x_i|^{a} \right )^{1/a} \le \left ( \sum_{i=1}^n|x_i|^{b}  \right )^{1/b} n^{1/a-1/b}
+%\end{equation}
+%
+%\begin{equation}
+%\| x \|_a \le n^{1/a - 1/b} \|x \|_b
+%\label{eq:inequal1}
+%\end{equation}
+%
+%Repeating the process with $ |z_i|  = 1$  in Equation~\ref{eq:holder2}
+%
+%\begin{equation}
+%\sum_{i=1}^n |y_i| \le \left ( \sum_{i=1}^n 1^{p}  \right )^{1/p} \left ( \sum_{i=1}^n |y_i| ^{\frac{p}{p-1}} \right )^{1-1/p}
+%\end{equation}
+%
+%\begin{equation}
+%\sum_{i=1}^n |y_i| \le \left ( \sum_{i=1}^n |y_i| ^{\frac{p}{p-1}} \right )^{1-1/p} n^{1/p} 
+%\end{equation}
+%
+%Taking $ |y_i|  = |x_i|^{b} $, with $ a  = \frac{b p}{p-1}$, 
+%
+% \begin{equation}
+%\sum_{i=1}^n |x_i|^{b} \le \left ( \sum_{i=1}^n|x_i|^{a}  \right )^{b/a} n^{1-b/a}
+%\end{equation}
+%
+% \begin{equation}
+%\left ( \sum_{i=1}^n |x_i|^{b} \right )^{1/b} \le \left ( \sum_{i=1}^n|x_i|^{a}  \right )^{1/a} n^{1/b-1/a}
+%\end{equation}
+%
+%\begin{equation}
+%\| x \|_b \le n^{1/b - 1/a} \|x \|_a
+%\label{eq:inequal2}
+%\end{equation}
+%
+%Equations~\ref{eq:inequal1} and \ref{eq:inequal2} show that there exist constants $m$ and $M$ independent of $x$, such that
+%
+%\begin{equation}
+%m \|x\|_a \le \| x\|_b \le M \| x \| _a
+%\end{equation}
