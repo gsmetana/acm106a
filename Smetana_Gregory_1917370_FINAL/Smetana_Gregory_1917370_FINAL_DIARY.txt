@@ -1,0 +1,2 @@
+run('Smetana_Gregory_1917370_FINAL.m');
+diary off
