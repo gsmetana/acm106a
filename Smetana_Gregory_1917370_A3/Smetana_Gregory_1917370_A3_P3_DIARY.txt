@@ -1,0 +1,8 @@
+run('Smetana_Gregory_1917370_A3_P3.m')
+t_alg = 50.36(26.9612) [microsecond]
+t_0 = 940.84(306.3166) [microsecond]
+t_1 = 983.2(181.2501) [microsecond]
+t_2 = 19730.08(3057.426) [microsecond]
+t_3 = 981.44(174.2838) [microsecond]
+t_4 = 17857.24(3262.123) [microsecond]
+t_5 = 29766.56(4557.8832) [microsecond]

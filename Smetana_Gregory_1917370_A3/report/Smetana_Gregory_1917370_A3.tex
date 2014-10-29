@@ -1,0 +1,222 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{letterpaper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+\renewcommand\thesubsection{\alph{subsection})}
+
+%%% The "real" document content comes below...
+\usepackage[normalem]{ulem}
+
+\title{Assignment 3: The LU and Cholesky Decomposition}
+\author{ Gregory \uline{Smetana} \\ID 1917370 \\ ACM 106a }
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+\usepackage{../mcode}
+
+\usepackage{mathtools}
+\pagestyle{fancy}
+\lhead{Gregory \uline{Smetana}}
+\rhead{ID 1917370 }
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\section{Why not to explicitly evaluate the inverse (unless absolutely necessary)}
+
+One algorithm to solve the matrix equation
+\begin{equation}
+AX=B
+\end{equation}
+with $A \in \mathbf{R}^{nxn}$ and $B \in \mathbf{R}^{nxn}$ is to find $A^{-1}$ using Gaussian elimination with partial pivoting and compute the product $X = A^{-1}B$. The inverse is given by the right part of the augmented matrix $(A |I)$ after the left part has been reduced to the identity matrix by performing elementary row operations. The inverse $A^{-1}$ of $A$ is the solution to the matrix equation
+\begin{equation}
+AX=I
+\end{equation}
+The algorithm has four steps:
+\begin{enumerate}
+\item The entry in the left column with the largest absolute value (pivot) is found. 
+\item The rows are interchanged so that the pivot is in the first row
+\item The first row is divided by the pivot.
+\item Elementary row operations are used to reduce the other entries in the first column to zero. 
+\end{enumerate}
+The steps are repeated on each submatrix of $A$ until it is in row echelon form. Back substitution is then used to reduce the left part of the augmented matrix to the identity. After the inverse is known, the product $X = A^{-1}B$ may be computed.
+
+
+A second algorithm factorizes $A=PLU$ using Gaussian elimination and then solves for each column of $X$ by forward and back substitution. This is done by applying Algorithm 2.1 from Demmel:
+
+\begin{enumerate}
+\item Factorize $A$ into $A=PLU$, where \\
+	P = permutation matrix \\
+	L = unit lower triangular matrix \\
+	U = nonsingular upper triangular matrix
+\item Solve $PLUx = b$ for LUx:  $LUx = P^{T}b$
+\item Solve $LUx = P ^{T}B$ for $Ux$ by forward substitution: : $Ux = L^{-1}(P^{T}b)$
+\item Solve $Ux = L^{ -1} (P ^{T}B)$ for $x$ by back substitution: $x = U^{-1}(L^{-1}P^{T}b)$
+
+
+\end{enumerate}
+Therefore, a formula for $A^{-1}$ may be expressed as:
+\begin{equation}
+A^{-1} = U^{-1}L^{-1}P^{T}
+\end{equation}
+
+
+From class, we know that the LU factorization requires $2/3 n^3$ operations. After this is done,  the solution for each column needs 2 substitutions with  $n^2$ operations each. Therefore, solving the general matrix equation $AX=B$ requires $2/3 n^3 +  2n^2 m$ operations. If $B=I$, the total number of operations required is approximately $8/3 n^3$.
+
+Solving the linear system $Ax=b$ by first computing the inverse therefore requires $\approx 8/3n^3$ operations. Solving the system by Gaussian elimination with partial pivoting requires $\approx 2/3 n^3$ operations. Therefore, one should never explicitly evaluate the inverse unless absolutely necessary.
+%flops?
+% LU 2/3 n^3
+% Gauss jordan to find inverse: 8/3 n^3 Trefethen & Bau
+
+\section{The LDL Decomposition}
+Suppose that $A \in \mathbf{R}^{n×n}$ is nonsingular and there exists unique lower triangular matrix $L \in \mathbf{R}^{n×n}$ with diagonal entries equal to 1 and unique upper triangular matrix $U \in \mathbf{R}^{n×n}$ such that
+
+\begin{equation}
+A = LU
+\end{equation}
+Since $A$ is nonsingular, it follows that $U$ is nonsingular. Since $U$ is triangular, all of the diagonal entries of $U$ must be non-zero. This means the diagonal matrix
+
+\begin{equation}
+D=
+ \begin{pmatrix}
+  u_{1,1}  & &0 \\
+ & \ddots &  \\
+  0  &   &   & u_{n,n}  \\
+ \end{pmatrix}
+\end{equation}
+is also nonsingular. Therefore, there exists a unique upper triangular matrix $\tilde{U} \in \mathbf{R}^{nxn}$ with all diagonal entries equal to 1 such that
+\begin{equation}
+U = D \tilde{U}
+\end{equation}
+and the matrix $A$ may be expressed uniquely as
+\begin{equation}
+A = L D \tilde{U}
+\end{equation}
+If $A$ is symmetric,
+\begin{equation}
+A = A^{T} = (L D \tilde{U})^{T} = \tilde{U}^{T} D L^{T}
+\end{equation}
+This result implies that $\tilde{U}^{T}=L$ and $A$ has an $LDL$ decomposition:
+
+\begin{equation}
+\boxed{A= L D L^{T}}
+\end{equation}
+
+\section{Fun with ``$\backslash$"}
+
+\subsection{} %3a
+
+The linear system $Ax = b$, where $b \in \mathbf{R}^n $ and $A \in \mathbf{R}^{n×n}$ where $A$ is a nonsingular matrix may be solved simply with one line of Matlab code:
+
+\begin{equation}
+\begin{array}{l@{}l}
+\verb!x = b ./ diag(A); !\\
+\end{array}
+\label{eq:3a_alg}
+\end{equation}
+Since each element of $x$ only requires one operation, the algorithm is linear in time and requires only $O(n)$ flops.
+
+\subsection{} %3b
+
+Noise was added by perturbing A with $\beta E$ with $\beta = 10^{-15}$ to obtain the following matrices:
+\begin{enumerate}
+\item $A_1 = A + \beta E_1$, where $E_1 = e_1 e_2^T$, and $e_1 $, $e_2$ are the first two standard basis vector
+\item $A_2 = A + \beta E_2$, where $E_2 = E_1 + E_1^T$
+\item $A_3 = A + \beta E_3$, where $E_3$ generated by $E_3 =$ triu(rand($n$));
+\item $A_4 = A + \beta E_4$, where $E_4$ generated by $E_4 =$ rand($n$);
+$E_4 = (E_4 + E_4 )/2;$
+
+\item $A_5 = A + \beta E_5$, where $E_5$ generated by $E_5$ = rand($n$)
+\end{enumerate}
+
+The test was done with 25 instances for $n =1000$ for a random diagonal matrix $A$ and vector $b$. The average and standard deviation of the time required to solve the unperturbed matrix using the algorithm of Equation~\ref{eq:3a_alg} is compared with the backslash operator for each of perturbed matrices in Table~\ref{tab:3b}.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{| l | l | l |}\hline
+ & average time [$\mu s$] & standard deviation [$\mu s$] \\ \hline
+solve\_diag(A) & 50.36& 26.9612\\ \hline
+$A\backslash b$ & 940.84 &306.3166\\ \hline
+$A_1\backslash b$ &983.2&181.2501 \\ \hline
+$A_2\backslash b$ & 19730.08 & 3057.426\\ \hline
+$A_3\backslash b$ &981.44 & 174.2838\\ \hline
+$A_4\backslash b$ & 17857.24 & 3262.123 \\ \hline
+$A_5\backslash b$ & 29766.56 & 4557.8832\\ \hline 
+\end{tabular}
+\caption{}
+\label{tab:3b}
+
+\end{table}
+The command mldivide took the least time to solve matrix $A$, slightly more time to solve matrices $A_1$ and $A_3$, much more time to solve matrices $A_2$ and $A_4$, and the most time to solve matrix $A_5$. These differences in time and computational complexity may be explained by the structure of the perturbed matrix and the default Matlab algorithm.
+
+The command mldivide must have detected the triangular structure of $A$, because the non-perturbed system took the least time to solve. The perturbed matrices $A_1$ and $A_3$ only took slightly longer because they are triangular and could be solved with back substitution, which is $O(n^2)$. Matrices $A_2$ and $A_4$ are symmetric, so the a Cholesky decomposition is used, which is $O(n^3)$. Matrix $A_5$ does not  have any structure that may be exploited, so a full $LU$ decomposition is used, which is approximately twice as complex as the Cholesky decomposition.
+
+\clearpage
+\appendix
+\section{Smetana\_Gregory\_1917370\_A3\_P3\_DIARY.txt}
+\lstinputlisting{../Smetana_Gregory_1917370_A3_P3_DIARY.txt}
+
+\section{Smetana\_Gregory\_1917370\_A3\_P3.m}
+\lstinputlisting{../Smetana_Gregory_1917370_A3_P3.m}
+
+\section{solve\_diag.m}
+\lstinputlisting{../solve_diag.m}
+
+\end{document}
+
