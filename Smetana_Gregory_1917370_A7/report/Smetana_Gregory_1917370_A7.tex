@@ -1,0 +1,423 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{letterpaper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+\renewcommand\thesubsection{\alph{subsection})}
+
+%%% The "real" document content comes below...
+\usepackage[normalem]{ulem}
+
+\title{Assignment 7: Iterative methods}
+\author{ Gregory \uline{Smetana} \\ID 1917370 \\ ACM 106a }
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+\usepackage{../mcode}
+
+\usepackage{mathtools}
+\pagestyle{fancy}
+\lhead{Gregory \uline{Smetana}}
+\rhead{ID 1917370 }
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\section{Gauss-Seidel as convex optimization}
+In this exercise, we will prove the following:\\
+
+\emph{Suppose that the matrix $A \in R^{n \times n}$ is symmetric positive definite. Then the Gauss-Seidel method applied to the linear system $Ax = b$ converges to the solution $x = A^{-1} b$.}
+
+\subsection{} %1a
+In this part, we show that if $A \in \mathbf{R}^{n \times n}$ is symmetric positive definite, then the solution  $\overline{x} = A^{-1} b$ is the unique minimizer of the unconstrained convex program
+\begin{equation}
+\substack{\min \\x \in \mathbf{R}^n}f(x) :=\substack{\min \\x \in \mathbf{R}^n}\frac{1}{2}x^T A x - b^T x
+\label{eq:convex}
+\end{equation}
+For unconstrained problems, $x$ is a global minimizer if and only if $\nabla f(x) =0$.
+\begin{equation}
+\begin{split}
+[ \nabla f(x) ]_i & = \frac{ \partial f}{\partial x_i} \\
+& = \frac{\partial }{\partial x_i} \left ( \frac{1}{2}x_j A_{jk}x_k - b_k x_k \right )\\
+& =  \frac{1}{2} \left ( \delta_{ij}A_{jk} x_k + x_j A_{jk}\delta_{ik} \right ) - b_k \delta_{ik} \\
+& = \frac{1}{2} \left ( A_{ik} x_k + x_j A_{ji} \right ) - b_i \\
+& = A_{ij}x_j - b_i
+\end{split}
+\end{equation}
+\begin{equation}
+\nabla f(x) =Ax-b
+\end{equation} 
+where we have used the symmetry of $A$. Now, considering the solution  $x = A^{-1} b$,
+\begin{equation}
+\begin{split}
+\nabla f(x)  & = A (A^{-1} b) -b \\
+&=0
+\end{split}
+\end{equation}
+so we have shown that \uline{$x = A^{-1} b$ is a minimizer of the unconstrained convex program of Equation~\ref{eq:convex}}.
+To prove uniqueness, assume we have $f(\overline{x})= f(\overline{x} +d )$ for some $d \ne 0$
+\begin{equation}
+\begin{split}
+\overline{x}^T \frac{A}{2} \overline{x} - b^T \overline{x} &= (\overline{x}+d)^T \frac{A}{2}(\overline{x}+d) - b^T( \overline{x}+d)  \\
+\overline{x}^T \frac{A}{2} \overline{x} - b^T \overline{x} &=\overline{x}^T \frac{A}{2} \overline{x} +\overline{x}^T \frac{A}{2} d + d^T \frac{A}{2} \overline{x} + d^T \frac{A}{2} d - b^T \overline{x} -b^T d \\
+0 &=\overline{x}^T \frac{A}{2} d + d^T \frac{A}{2} \overline{x} + d^T \frac{A}{2} d -b^T d 
+\end{split}
+\end{equation}
+Now substituting in $b=A \overline{x} $
+\begin{equation}
+0 =\overline{x}^T \frac{A}{2} d + d^T \frac{A}{2} \overline{x} + d^T \frac{A}{2} d -(A\overline{x})^T d 
+\end{equation}
+Using the symmetry of $A$,
+\begin{equation}
+0=\overline{x}^T A d  + d^T \frac{A}{2} d -\overline{x}^T A d \\
+\end{equation}
+\begin{equation}
+ \frac{1}{2} d^T A d=0
+\label{eq:contradiction}
+\end{equation}
+Recall the definition of a positive definite matrix:
+\begin{equation}
+x^T A x > 0 \quad \quad \forall x \ne 0
+\end{equation}
+So Equation~\ref{eq:contradiction} contradicts our assumption of $d \ne 0$. Therefore, \uline{$\overline{x}$ is unique.}
+
+\subsection{} %1b
+Suppose we greedily choose the step length to maximize decrease in objective value:
+\begin{equation}
+\alpha_i = \substack{\arg  \min \\ \alpha} f(x+ \alpha e_i)
+\end{equation}
+Expanding,
+\begin{equation}
+\begin{split}
+\alpha_i &= \substack{\arg  \min \\ \alpha}(x + \alpha e_i )^T \frac{A}{2} (x+ \alpha e_i) - b^T (x-\alpha e_i) \\
+ &=\substack{\arg  \min \\ \alpha} \; x^T \frac{A}{2} x+\alpha x^T \frac{A}{2}  e_i + \alpha e_i^T \frac{A}{2} x + \alpha^2 e_i^T \frac{A}{2} e_i - b^T x-\alpha b^T e_i
+\end{split}
+\end{equation}
+$A$ is a positive definite matrix, so setting the first derivative with respect to $\alpha$ to zero will give the minimum value
+\begin{equation}
+0 = x^T \frac{A}{2}  e_i +  e_i^T \frac{A}{2} x +  \alpha_i e_i^T A e_i - b^T e_i
+\end{equation}
+writing out indicies,
+\begin{equation}
+0 = x_j \frac{A_{ji}}{2} +  \frac{A_{ij}}{2} x_j +  \alpha_i A_{ii} - b_i
+\end{equation}
+\begin{equation}
+\alpha_i = \frac{1}{A_{ii}} \left ( b_i  -x_j A_{ji}\right )
+\end{equation}
+\begin{equation}
+x^{new} = x + \frac{1}{A_{ii}} \left (b_i  - A_{ij}x_j\right )
+\end{equation}
+\begin{equation}
+\boxed{x^{new} =  \frac{1}{A_{ii}} \left (b_i  - \sum_{j\ne i} A_{ij}x_j\right )}
+\end{equation}
+The update formula for Gauss-Seidel is
+\begin{equation}
+x_i^{k+1} = \frac{1}{A_{ii}} \left ( b_i - \sum_{j<i} A_{ij} x_j^{k+1} - \sum_{j>i} A_{ij} x_j ^k \right )
+\end{equation}
+In Gauss-Seidel iteration, the entries of $x$ are updated one by one. If you overwrite the old entries using the new entry at each step, the updating formula is
+ \begin{equation}
+\boxed{x^{new} =  \frac{1}{A_{ii}} \left (b_i  - \sum_{j\ne i} A_{ij}x_j\right )}
+\end{equation}
+And we see that the \uline{optimization approach uses the same operation to update $x_i$ as Gauss-Seidel.}
+\subsection{} %1c
+Suppose that $x = \overline{x} + e$ is an approximation of $\overline{x} = A^{-1} b$. In this part, we show that the $A$-norm defined by 
+\begin{equation}
+\|e\|_A = \sqrt{e^T A e}
+\end{equation}
+of the error $e$ satisfies
+\begin{equation}
+| f(x) - f(\overline{x}) | = \frac{1}{2} \| e \|^2_A
+\end{equation}
+Starting with the left hand side,
+\begin{equation}
+\begin{split}
+| f(x) - f(\overline{x}) | & = \frac{1}{2} x^T A x - b^T x - \frac{1}{2} \overline{x} ^T A \overline{x} + b^T \overline{x}
+\end{split}
+\end{equation}
+Now substituting in $b=A \overline{x} $ and using symmetry of $A$,
+\begin{equation}
+\begin{split}
+| f(x) - f(\overline{x}) | &= \frac{1}{2} x^T A x - (A \overline{x})^T x - \frac{1}{2} \overline{x}^T  A \overline{x} + (A \overline{x})^T \overline{x} \\
+& = \frac{1}{2} x^T A x -  \overline{x}^T A x - \frac{1}{2} \overline{x}^T A \overline{x} + \overline{x}^T A \overline{x} \\
+& = \frac{1}{2}\left ( x^T A x - 2  \overline{x}^T A x +  \overline{x}^T A \overline{x}\right  ) \\
+& = \frac{1}{2}\left ( x^T A x -   \overline{x}^T A x - x^T A \overline{x} +  \overline{x}^T A \overline{x}\right  )\\
+&= \frac{1}{2} (x- \overline{x})^T A (x-\overline{x}) \\
+&=\frac{1}{2} e^T A e\\
+&=\frac{1}{2}\|e\|_A ^2
+\end{split}
+\end{equation}
+Therefore, it has been shown that
+\begin{equation}
+\boxed{| f(x) - f(\overline{x}) | = \frac{1}{2} \| e \|^2_A}
+\end{equation}
+\textbf{Completing the proof}: Parts (a), (b), and (c) in tandem prove the theorem. Indeed, Parts (a) and (b)
+establish that the function value of $f$ decreases during each Gauss-Seidel step (because it decreases during each cycle of coordinate descent unless we have already converged to the solution) and that this value of $f$ is bounded below by the optimal value $f ( \overline{x})$. Because these function values form a monotonically decreasing $x$ sequence with infimum $f(\overline{x})$, Part (c) implies that the sequence of errors converge to 0 (with respect to the A-norm) or, equivalently, that the sequence of iterates $\{x^{(k)}\} $ generated by Gauss-Seidel converges to $\overline{x}$
+
+
+\section{Early convergence of Arnoldi iteration}
+Suppose that at the nth step of Arnoldi iteration (applied to the matrix $A \in C^{m \times m}$ with vector $b 
+\in C^m$ )
+we obtain $H_{n+1,n} = 0$ in the recurrence relation
+\begin{equation}
+AQ_n = Q_{n+1} \tilde{H}_{n}
+\label{eq:recurr}
+\end{equation}
+The following exercises will establish that we can stop the Arnoldi iteration after this step; that is, we’ve found a basis for all Krylov subspaces of $A$ generated by $b$, and the maximal such subspace contains our
+desired matrix equation solutions.
+
+\subsection{} %2a
+We let $H_n = H(1:n,1:n)$,  $\tilde{H}_n = H(1:n+1,1:n)$, and $Q_n = [q_1, q_2, ..., q_n]$ be the first $n$ columns of $Q$. Then Equation~\ref{eq:recurr} may be rewritten
+\begin{equation}
+A Q_n = Q_n H_n + q_{n+1} H_{n+1,n}e_n^T
+\end{equation}
+where $e_n^T = [0, 0 , ..., 0, 1] \in \mathbf{R}^n$. In the case of $H_{n+1,n} = 0$, the equation is
+\begin{equation}
+\boxed{A Q_n = Q_n H_n }
+\end{equation}
+
+\subsection{} %2b
+Using Part (a), we now show that $\mathcal{K}_n$ is an invariant subspace of $A$, i.e., $A \mathcal{K}_n \subseteq \mathcal{K}_n$.
+
+\begin{equation}
+ \mathcal{K}_n = \text{span}\{ q_1, q_2, ... , q_n \}
+\end{equation}
+\begin{equation}
+\begin{split}
+ A\mathcal{K}_n & = \text{span}\{ A q_1, A q_2, ... , Aq_n \} \\
+& = \text{span} \{ AQ_n \}
+\end{split}
+\end{equation}
+It was shown in Part (a) that $A Q_n = Q_n H_n$
+\begin{equation}
+\begin{split}
+Q_n H_n (:,i) &= Q_n \left[
+\begin{array}{c}
+H_{1i}\\
+\vdots \\
+H_{ni}\\
+\end{array}
+\right] \\
+&=\left [ q_1, ..., q_n \right ]
+\left[
+\begin{array}{c}
+H_{1i}\\
+\vdots \\
+H_{ni}\\
+\end{array}
+\right] \\
+& = H_{1i} q_1 + ... + H_{ni}q_n
+\end{split}
+\end{equation}
+which is a linear combination of the vectors $\{ q_1, q_2, ... , q_n \}$. Therefore, $ A \mathcal{K}_n = \text{span}\{ q_1, q_2, ... , q_n \}$ and it has been shown that
+\begin{equation}
+\boxed{A \mathcal{K}_n \subseteq \mathcal{K}_n}
+\end{equation}
+
+\subsection{} %2c
+Using Part (b), we now show that we have  $ \mathcal{K}_n =   \mathcal{K}_{n+1} = ...$
+
+It was shown in Part (b) that $A \mathcal{K}_n \subseteq \mathcal{K}_n$, where
+\begin{equation}
+ \mathcal{K}_n = \text{span}\{ b, Ab, ... , A^{n-1}b \}
+\end{equation}
+\begin{equation}
+ \mathcal{K}_{n+1} = \text{span}\{ b, Ab, ... , A^n b \}
+\end{equation}
+Examining the last element
+\begin{equation}
+A^n b = A( A ^{n-1} b)
+\end{equation}
+\begin{equation}
+A^{n-1}b \subseteq \mathcal{K}_n
+\end{equation}
+so
+\begin{equation}
+A^n b \subseteq A \mathcal{K}_n = \mathcal{K}_n
+\end{equation}
+Therefore, we have
+\begin{equation}
+\boxed{ \mathcal{K}_n =   \mathcal{K}_{n+1} = ...}
+\end{equation}
+\subsection{} %2d
+Suppose that $\lambda$ is an eigenvalue of $H_n$ with corresponding eigenvector $v$
+\begin{equation}
+H_n v = \lambda v
+\end{equation}
+\begin{equation}
+Q_n H_n v = \lambda Q_n v
+\end{equation}
+\begin{equation}
+A_n Q_n v = \lambda Q_n v
+\end{equation}
+\begin{equation}
+A_n w = \lambda w
+\end{equation}
+Therefore, \uline{$\lambda$ is also an eigenvalue of $A$}, with corresponding eigenvalue
+\begin{equation}
+\boxed{w = Q_n v}
+\end{equation}
+
+\subsection{} %2e
+For any nonsingular matrix $A \in \mathbf{C}^{m \times m}$ , it is known that we may decompose its inverse as the matrix polynomial
+\begin{equation}
+A^{-1} = \sum_{k=0}^{m-1}c_k A^k
+\end{equation}
+for some scalars $c_0 , c_1 , . . . , c_{m-1}.$
+\begin{equation}
+x = A^{-1} b = \sum_{k=0}^{m-1}c_k A^k b
+\end{equation}
+\begin{equation}
+\text{span} (x) = \left\{ b, Ab, A^2b, ... ,A^{m-1}b \right\} = \mathcal{K}_m
+\end{equation}
+In part c), it was shown that $\mathcal{K}_m = \mathcal{K}_n$. Therefore, \uline{the solution of $Ax =b$ belongs to $\mathcal{K}_n$}
+
+\section{Practical convergence of Gauss-Seidel and Jacobi}
+Consider the linear system $Ax = b$ defined by
+\begin{equation}
+A =\left ( \begin{array}{rrr}
+3 & -5 & 2 \\
+5 & 4 & 3 \\
+2 & 5 & 3
+\end{array} \right ) \quad \quad 
+b =\left ( \begin{array}{r}
+1 \\
+1 \\
+1 
+\end{array} \right )
+\label{eq:3}
+\end{equation}
+\subsection{} %3a
+The spectral radius of a matrix $A$ is defined as
+\begin{equation}
+\rho(A) = \max \{| \lambda | : \lambda \mbox{ is an eigenvalue of } A \}
+\label{eq:spectral}
+\end{equation}
+The update matrix of the Jacobi method is 
+\begin{equation}
+R_J = D^{-1}( \tilde{L} +\tilde{U})
+\end{equation}
+The update matrix of Gauss-Seidel is
+\begin{equation}
+R_{GS} = (D - \tilde{L})^{-1} \tilde{U}
+\end{equation}
+where we adopt the Demmel notation of 
+\begin{equation}
+A = D - \tilde{L} - \tilde{U} 
+\end{equation}
+where $-\tilde{L}$ is the strictly lower triangular part of $A$ and $-\tilde{U}$ is the strictly upper triangular part of $A$.
+
+Computing the spectral radius of the update matrices corresponding with the system of Equation~\ref{eq:3},
+\begin{equation}
+\boxed{\rho(R_{J}) = 0.913}
+\end{equation}
+\begin{equation}
+\boxed{\rho(R_{GS}) = 2.163}
+\end{equation}
+A splitting method converges if and only if the update matrix has spectral radius satisfying 
+\begin{equation}
+\rho(R) < 1
+\end{equation}
+Therefore, we expect that the Jacobi method with converge and the Gauss-Seidel method will diverge. The Gauss-Seidel method will not be useful, but the Jacobi method may be used to solve the linear system. 
+
+\subsection{} %3b
+Four  Matlab functions were written implementing Jacobi and Gauss-Seidel methods using for loops and update matrices. The inputs are $A$, $b$, initial iterate $x^{(0)}$, and the relative residual error tolerance. They are attached in the Appendix.
+
+\subsection{} %3c
+Each of the codes was used to solve the system $Ax = b$ with  $x^{(0)} = (0,0,0)$, $tol = 10^{-3}$, and a maximum of 100 iterations. A aggregate time was calculated using ``tic/toc" over 1000 experiment runs. The results are displayed in Table~\ref{tab:3c}.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{| l | l | l|l |}\hline
+ & Relative error & Number of iterates & Total time [s] \\ \hline
+ Jacobi  Matrix & 1.4306e-03 &  77  &    3.3907e-01 \\ \hline
+ Jacobi Sequential  &    1.4306e-03  &77  &    4.0913e-01  \\ \hline
+Gauss-Seidel Matrix&   7.4055e+32& 100 &      4.3540e-01    \\ \hline
+Gauss-Seidel Sequential &    7.4055e+32 & 100  &      3.7104e-01 \\ \hline
+\end{tabular}
+\caption{}
+\label{tab:3c}
+\end{table}
+
+
+The convergence phenomena matches that predicted in Part (a). The Jacobi method converges to the correct solution, while the Gauss-Seidel method diverges. It was found that the Jacobi method using matrices and the Gauss-Seidel using for loops were the fastest. It must be that the time required to assemble the Gauss-Seidel update matrix and store it in memory was a large component of the algorithm run time. For most problems, it is much quicker to use matrix-vector multiplication (optimized by Matlab) than for-loops.
+
+\subsection{} %3d
+The experiment was repeated for a few randomly chosen values of $b$ and $x^{(0)}$. The observed convergence phenomena did not change, with the Jacobi method converging and the Gauss-Seidel method diverging. These results coincide with that predicted by theory. The convergence of a splitting method depends only on the update matrix $R$, not on the value of $b$ or the initial iterate.
+
+\clearpage
+\appendix
+\section{jacobi\_mat.m}
+\lstinputlisting{../jacobi_mat.m}
+
+\section{jacobi\_seq.m}
+\lstinputlisting{../jacobi_seq.m}
+
+\section{gs\_mat.m}
+\lstinputlisting{../gs_mat.m}
+
+\section{gs\_seq.m}
+\lstinputlisting{../gs_seq.m}
+
+\section{Smetana\_Gregory\_1917370\_A7\_P3\_DIARY.txt}
+\lstinputlisting{../Smetana_Gregory_1917370_A7_P3_DIARY.txt}
+
+\section{Smetana\_Gregory\_1917370\_A6\_P3.m}
+\lstinputlisting{../Smetana_Gregory_1917370_A7_P3.m}
+
+\end{document}
+
